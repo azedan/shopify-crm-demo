@@ -62,6 +62,23 @@ layer in `app/crm/queries.server.ts` with Admin API calls and keep everything
 else. The timeline merge is a pure function over plain records and does not care
 where they came from.
 
+> ### ⚠️ Read this before adapting it: there is no tenant scoping
+>
+> `Customer`, `Order`, `Interaction`, and `LifecycleEvent` have **no `shop`
+> column**. Only the template's `Session` model is shop-scoped. Every read and
+> the single write address rows by id alone, without checking the row belongs to
+> the authenticated shop.
+>
+> That is fine for what this is — a single dev store with fake local data — and
+> it is a deliberate scoping decision, not an oversight. But if you point this at
+> real data or install it on more than one shop, **any authenticated shop could
+> read or write any other shop's customers.**
+>
+> Making it multi-tenant means adding `shop` to each model, backfilling it,
+> indexing it, and filtering on it in every query in `queries.server.ts` and
+> `interactions.server.ts`. That is real work, not a config flag. Do it before
+> the app touches anything real.
+
 ## Stack
 
 Remix, Shopify App Bridge, Polaris, Prisma + SQLite, Vitest, TypeScript.
