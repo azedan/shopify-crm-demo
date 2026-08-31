@@ -13,6 +13,33 @@ export interface CustomerListRow {
   lastActivityAt: Date | null;
 }
 
+/** The two columns the spec makes sortable. */
+export type CustomerSortKey = "lastActivity" | "lifetimeValue";
+
+export interface CustomerSort {
+  key: CustomerSortKey;
+  direction: "asc" | "desc";
+}
+
+export const DEFAULT_CUSTOMER_SORT: CustomerSort = {
+  key: "lastActivity",
+  direction: "desc",
+};
+
+/**
+ * Sort comes off the query string, so anything can arrive here. Narrow to the
+ * two supported keys and fall back to the default rather than trusting it.
+ */
+export function parseCustomerSort(
+  key: string | null,
+  direction: string | null,
+): CustomerSort {
+  return {
+    key: key === "lifetimeValue" ? "lifetimeValue" : "lastActivity",
+    direction: direction === "asc" ? "asc" : "desc",
+  };
+}
+
 export interface CustomerDetail {
   customer: {
     id: string;
@@ -31,6 +58,7 @@ export interface CustomerDetail {
 
 export async function listCustomers(
   search?: string,
+  sort: CustomerSort = DEFAULT_CUSTOMER_SORT,
 ): Promise<CustomerListRow[]> {
   const term = search?.trim();
 
@@ -62,10 +90,19 @@ export async function listCustomers(
     };
   });
 
+  const sortValue = (row: CustomerListRow) =>
+    sort.key === "lifetimeValue"
+      ? row.lifetimeValueCents
+      : (row.lastActivityAt?.getTime() ?? 0);
+
   rows.sort((a, b) => {
-    const at = a.lastActivityAt?.getTime() ?? 0;
-    const bt = b.lastActivityAt?.getTime() ?? 0;
-    return bt - at;
+    const delta = sortValue(a) - sortValue(b);
+    if (delta !== 0) return sort.direction === "asc" ? delta : -delta;
+
+    // Ties are common — several customers can share a lifetime value of 0.
+    // Without this the order falls through to whatever Prisma returned, which
+    // is stable per query but not something to rely on.
+    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
   });
 
   return rows;
