@@ -3,10 +3,27 @@
 A lightweight CRM that runs embedded inside Shopify admin. It answers one
 question: **"tell me everything about this person before I talk to them."**
 
-Built as a demo for the [eCommerceFuel](https://www.ecommercefuel.com/) community.
+**Built as a demo for the [eCommerceFuel](https://www.ecommercefuel.com/) (ECF)
+community.**
 
-> **This is a demo, not a product.** It is not on the Shopify App Store, it has
-> no billing, and it is not intended for production use on a real store.
+> ### ⚠️ Demo software — use at your own risk
+>
+> This was built to show ECF members one way to approach a CRM layer on top of
+> Shopify. **It is a demo, not a product.**
+>
+> - Not on the Shopify App Store, and not submitted for review
+> - No billing, no support, no maintenance commitment
+> - Not audited for security, privacy, or GDPR compliance
+> - Its data is entirely fake and local — it is not wired to any real store
+>
+> If you run it, adapt it, or ship anything derived from it, **you do so
+> entirely at your own risk.** Provided as-is, without warranty of any kind.
+> Neither the author nor eCommerceFuel is liable for anything that results from
+> its use. Review it yourself before it goes anywhere near a real storefront or
+> real customer data.
+>
+> eCommerceFuel is credited as the audience this was made for. That is not an
+> endorsement, affiliation, or review by ECF.
 
 ## What it does
 
@@ -87,4 +104,11 @@ merge, seed data, and UI are being built out task by task against the plan above
 
 ## License
 
-MIT
+MIT.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
