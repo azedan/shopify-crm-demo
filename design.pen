@@ -3,16 +3,1556 @@
   "children": [
     {
       "type": "frame",
-      "id": "bi8Au",
+      "id": "krm8r",
       "x": 0,
       "y": 0,
-      "name": "Frame",
+      "name": "Timeline Event",
+      "reusable": true,
+      "width": 560,
+      "stroke": "$border",
+      "strokeWidth": {
+        "bottom": 1
+      },
+      "strokeAlignment": "inner",
+      "gap": 12,
+      "padding": [
+        12,
+        0
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "PySH0",
+          "name": "Marker Column",
+          "width": 12,
+          "padding": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "IJ6Lh",
+              "name": "Marker",
+              "fill": "$text-disabled",
+              "width": 9,
+              "height": 9,
+              "stroke": "$text-disabled",
+              "strokeWidth": 2,
+              "strokeAlignment": "inner"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "R0Rek",
+          "name": "Body",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 2,
+          "children": [
+            {
+              "type": "text",
+              "id": "hsroa",
+              "name": "Title",
+              "fill": "$text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Order #1487 delivered",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "k5dJg",
+              "name": "Detail",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "3 items · $164.00",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "vUlBv",
+          "name": "Time",
+          "fill": "$text-secondary",
+          "content": "Yesterday",
+          "lineHeight": 1.4,
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "P4LCvP",
+      "x": 0,
+      "y": 220,
+      "name": "Table Row",
+      "reusable": true,
+      "width": 1136,
+      "height": 44,
+      "fill": "$bg-surface",
+      "stroke": "$border",
+      "strokeWidth": {
+        "bottom": 1
+      },
+      "strokeAlignment": "inner",
+      "padding": [
+        0,
+        16
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FKKwY",
+          "name": "Name Cell",
+          "width": 260,
+          "height": "fill_container",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Rvluu",
+              "name": "Name",
+              "fill": "$text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Name",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "V5TBFf",
+          "name": "Email Cell",
+          "width": 320,
+          "height": "fill_container",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "J8kAOk",
+              "name": "Email",
+              "fill": "$text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Email",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "lwVPJ",
+          "name": "Lifetime value Cell",
+          "width": 160,
+          "height": "fill_container",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "nvjFR",
+              "name": "Lifetime value",
+              "fill": "$text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Lifetime value",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "I2fs9",
+          "name": "Orders Cell",
+          "width": 110,
+          "height": "fill_container",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "LInmT",
+              "name": "Orders",
+              "fill": "$text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Orders",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mSy2a",
+          "name": "Last activity Cell",
+          "width": 254,
+          "height": "fill_container",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "h2aDIq",
+              "name": "Last activity",
+              "fill": "$text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Last activity",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "d5Thp",
+      "x": 1240,
+      "y": 220,
+      "name": "Stat Row",
+      "reusable": true,
+      "width": 260,
+      "gap": 12,
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "csIn6",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "Lifetime",
+          "lineHeight": 1.4,
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "hQZRo",
+          "name": "Value",
+          "fill": "$text",
+          "content": "$4,182.00",
+          "lineHeight": 1.4,
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "dYMjo",
+      "x": 0,
+      "y": 420,
+      "name": "Customer List",
       "clip": true,
-      "width": 800,
-      "height": 600,
-      "fill": "#FFFFFF",
-      "layout": "none"
+      "width": 1200,
+      "fill": "$bg-app",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": 32,
+      "children": [
+        {
+          "type": "frame",
+          "id": "I7j5I",
+          "name": "Page Header",
+          "width": "fill_container",
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "oepRs",
+              "name": "Page Title",
+              "fill": "$text",
+              "content": "Customers",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 20,
+              "fontWeight": "650"
+            },
+            {
+              "type": "text",
+              "id": "l2HP7d",
+              "name": "Count",
+              "fill": "$text-secondary",
+              "content": "60 customers",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QScYB",
+          "name": "Customers Card",
+          "clip": true,
+          "width": "fill_container",
+          "fill": "$bg-surface",
+          "cornerRadius": "$radius-card",
+          "stroke": "$border",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#1A1A1A12",
+            "offset": {
+              "x": 0,
+              "y": 1
+            }
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "mlnmN",
+              "name": "Search Area",
+              "width": "fill_container",
+              "padding": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VdNkw",
+                  "name": "Search Field",
+                  "width": "fill_container",
+                  "height": 32,
+                  "fill": "$bg-input",
+                  "cornerRadius": "$radius-control",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "MXpBo",
+                      "name": "Search Icon",
+                      "width": 15,
+                      "height": 15,
+                      "icon": "search",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "rswr9",
+                      "name": "Placeholder",
+                      "fill": "$text-disabled",
+                      "content": "Search by name or email",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "rzf5Z",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Header Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "fontWeight": "600",
+                  "fill": "$text-secondary"
+                },
+                "J8kAOk": {
+                  "fontWeight": "600",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "fontWeight": "600",
+                  "fill": "$text-secondary"
+                },
+                "LInmT": {
+                  "fontWeight": "600",
+                  "fill": "$text-secondary"
+                },
+                "h2aDIq": {
+                  "fontWeight": "600",
+                  "fill": "$text-secondary",
+                  "content": "Last activity ↓"
+                }
+              }
+            },
+            {
+              "id": "g4TL2",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Dana Whitfield Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Dana Whitfield",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "dana.whitfield0@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$4,182.00"
+                },
+                "LInmT": {
+                  "content": "14"
+                },
+                "h2aDIq": {
+                  "content": "Today",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "dMGGU",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Felix Moreau Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Felix Moreau",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "felix.moreau9@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$437.80"
+                },
+                "LInmT": {
+                  "content": "6"
+                },
+                "h2aDIq": {
+                  "content": "Today",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "HHlgS",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Amara Nakamura Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Amara Nakamura",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "amara.nakamura5@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$3,540.00"
+                },
+                "LInmT": {
+                  "content": "11"
+                },
+                "h2aDIq": {
+                  "content": "Yesterday",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "g3lVMu",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Priya Raman Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Priya Raman",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "priya.raman1@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$1,286.50"
+                },
+                "LInmT": {
+                  "content": "6"
+                },
+                "h2aDIq": {
+                  "content": "2 days ago",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "Ha6xY",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Tobias Berg Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Tobias Berg",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "tobias.berg4@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$612.25"
+                },
+                "LInmT": {
+                  "content": "7"
+                },
+                "h2aDIq": {
+                  "content": "4 days ago",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "O1fLoM",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Marcus Oyelaran Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Marcus Oyelaran",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "marcus.oyelaran2@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$214.00"
+                },
+                "LInmT": {
+                  "content": "1"
+                },
+                "h2aDIq": {
+                  "content": "9 days ago",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "r3bFPE",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Wei Duarte Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Wei Duarte",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "wei.duarte6@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$1,704.00"
+                },
+                "LInmT": {
+                  "content": "5"
+                },
+                "h2aDIq": {
+                  "content": "12 days ago",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "jc3As",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Sofia Haddad Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Sofia Haddad",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "sofia.haddad7@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$89.00"
+                },
+                "LInmT": {
+                  "content": "1"
+                },
+                "h2aDIq": {
+                  "content": "22 days ago",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "IVOU0",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Ines Costa Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Ines Costa",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "ines.costa3@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$968.00"
+                },
+                "LInmT": {
+                  "content": "4"
+                },
+                "h2aDIq": {
+                  "content": "5 months ago",
+                  "fill": "$text-secondary"
+                }
+              }
+            },
+            {
+              "id": "PcNkK",
+              "type": "ref",
+              "ref": "P4LCvP",
+              "name": "Noor Lindqvist Row",
+              "width": "fill_container",
+              "descendants": {
+                "Rvluu": {
+                  "content": "Noor Lindqvist",
+                  "fontWeight": "600"
+                },
+                "J8kAOk": {
+                  "content": "noor.lindqvist8@example.com",
+                  "fill": "$text-secondary"
+                },
+                "nvjFR": {
+                  "content": "$1,120.00"
+                },
+                "LInmT": {
+                  "content": "3"
+                },
+                "h2aDIq": {
+                  "content": "7 months ago",
+                  "fill": "$text-secondary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Tm0D3",
+      "x": 1360,
+      "y": 420,
+      "name": "Customer Detail",
+      "clip": true,
+      "width": 1200,
+      "fill": "$bg-app",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": 32,
+      "children": [
+        {
+          "type": "frame",
+          "id": "rEkGz",
+          "name": "Page Header",
+          "width": "fill_container",
+          "gap": 8,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ypjfa",
+              "name": "Back Action",
+              "width": 28,
+              "height": 28,
+              "fill": "$bg-surface",
+              "cornerRadius": "$radius-control",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "J7cxh",
+                  "name": "Back Icon",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "chevron-left",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "QUiSt",
+              "name": "Page Title",
+              "fill": "$text",
+              "content": "Dana Whitfield",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 20,
+              "fontWeight": "650"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "JJE1R",
+          "name": "Columns",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "HLITh",
+              "name": "Primary Column",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rbo0P",
+                  "name": "Log Interaction Card",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#1A1A1A12",
+                    "offset": {
+                      "x": 0,
+                      "y": 1
+                    }
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "osK4P",
+                      "name": "Card Title",
+                      "fill": "$text",
+                      "content": "Log an interaction",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "650"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Kjya8",
+                      "name": "Form Row",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "pNIVy",
+                          "name": "Type Select",
+                          "width": 140,
+                          "height": 32,
+                          "fill": "$bg-input",
+                          "cornerRadius": "$radius-control",
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "gap": 8,
+                          "padding": [
+                            0,
+                            10
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "m2XdXl",
+                              "name": "Selected",
+                              "fill": "$text",
+                              "content": "Call",
+                              "lineHeight": 1.4,
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "eR8ya",
+                              "name": "Chevron",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "chevron-down",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YjoOa",
+                          "name": "Body Field",
+                          "width": "fill_container",
+                          "height": 32,
+                          "fill": "$bg-input",
+                          "cornerRadius": "$radius-control",
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "gap": 8,
+                          "padding": [
+                            0,
+                            10
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "JXkOT",
+                              "name": "Placeholder",
+                              "fill": "$text-disabled",
+                              "content": "What happened?",
+                              "lineHeight": 1.4,
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "LxDJg",
+                          "name": "Submit Button",
+                          "height": 32,
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-control",
+                          "padding": [
+                            0,
+                            14
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "EX8kC",
+                              "name": "Button Label",
+                              "fill": "$text-on-inverse",
+                              "content": "Log it",
+                              "lineHeight": 1.4,
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PqBYD",
+                  "name": "Timeline Card",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#1A1A1A12",
+                    "offset": {
+                      "x": 0,
+                      "y": 1
+                    }
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ZVX2K",
+                      "name": "Card Title",
+                      "fill": "$text",
+                      "content": "Timeline",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "650"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "puOQX",
+                      "name": "Feed",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "id": "THNdg",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Note — Wants early access to the winter drop",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$bg-surface"
+                            },
+                            "hsroa": {
+                              "content": "Note — Wants early access to the winter drop"
+                            },
+                            "k5dJg": {
+                              "content": "logged by You"
+                            },
+                            "vUlBv": {
+                              "content": "Today"
+                            }
+                          }
+                        },
+                        {
+                          "id": "qL6EA",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Order #1487 delivered",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Order #1487 delivered"
+                            },
+                            "k5dJg": {
+                              "content": "3 items · $164.00"
+                            },
+                            "vUlBv": {
+                              "content": "Yesterday"
+                            }
+                          }
+                        },
+                        {
+                          "id": "DLpIA",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Order #1487 fulfilled",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Order #1487 fulfilled"
+                            },
+                            "k5dJg": {
+                              "enabled": false
+                            },
+                            "vUlBv": {
+                              "content": "3 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "id": "u3vja",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Order #1487 placed",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Order #1487 placed"
+                            },
+                            "k5dJg": {
+                              "content": "3 items · $164.00"
+                            },
+                            "vUlBv": {
+                              "content": "5 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "id": "jwK8i",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Call — Asked about resizing",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$bg-surface"
+                            },
+                            "hsroa": {
+                              "content": "Call — Asked about resizing"
+                            },
+                            "k5dJg": {
+                              "content": "Outcome: resolved · logged by Ahmed"
+                            },
+                            "vUlBv": {
+                              "content": "8 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "id": "PoluP",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Order #1486 refunded",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Order #1486 refunded"
+                            },
+                            "k5dJg": {
+                              "content": "$48.00 returned"
+                            },
+                            "vUlBv": {
+                              "content": "14 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "id": "styIe",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Order #1486 delivered",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Order #1486 delivered"
+                            },
+                            "k5dJg": {
+                              "content": "2 items · $212.00"
+                            },
+                            "vUlBv": {
+                              "content": "21 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "id": "mfm7y",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Email — Wanted a shipping update",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$bg-surface"
+                            },
+                            "hsroa": {
+                              "content": "Email — Wanted a shipping update"
+                            },
+                            "k5dJg": {
+                              "content": "Outcome: no reply · logged by Rosa"
+                            },
+                            "vUlBv": {
+                              "content": "26 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "id": "ejhJz",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Order #1486 fulfilled",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Order #1486 fulfilled"
+                            },
+                            "k5dJg": {
+                              "enabled": false
+                            },
+                            "vUlBv": {
+                              "content": "Jul 30, 2026"
+                            }
+                          }
+                        },
+                        {
+                          "id": "RDQNO",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Order #1486 placed",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Order #1486 placed"
+                            },
+                            "k5dJg": {
+                              "content": "2 items · $212.00"
+                            },
+                            "vUlBv": {
+                              "content": "Jul 28, 2026"
+                            }
+                          }
+                        },
+                        {
+                          "id": "Z8uu3n",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Marketing consent granted",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Marketing consent granted"
+                            },
+                            "k5dJg": {
+                              "enabled": false
+                            },
+                            "vUlBv": {
+                              "content": "Mar 12, 2025"
+                            }
+                          }
+                        },
+                        {
+                          "id": "O0eKqO",
+                          "type": "ref",
+                          "ref": "krm8r",
+                          "name": "Account created",
+                          "width": "fill_container",
+                          "descendants": {
+                            "IJ6Lh": {
+                              "fill": "$text-disabled"
+                            },
+                            "hsroa": {
+                              "content": "Account created"
+                            },
+                            "k5dJg": {
+                              "enabled": false
+                            },
+                            "vUlBv": {
+                              "content": "Mar 2, 2025"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HajHo",
+              "name": "Sidebar",
+              "width": 300,
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TRp06",
+                  "name": "Contact Card",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#1A1A1A12",
+                    "offset": {
+                      "x": 0,
+                      "y": 1
+                    }
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "x1ysQ",
+                      "name": "Card Title",
+                      "fill": "$text",
+                      "content": "Customer",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "650"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uNemc",
+                      "name": "Lines",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "lWt2Q",
+                          "name": "Email",
+                          "fill": "$link",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "dana.whitfield0@example.com",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "CEcQc",
+                          "name": "Phone",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "+1 415 555 2841",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "i34cO",
+                          "name": "Location",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Portland, OR",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JmMc1",
+                  "name": "Value Card",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#1A1A1A12",
+                    "offset": {
+                      "x": 0,
+                      "y": 1
+                    }
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nVZU7",
+                      "name": "Card Title",
+                      "fill": "$text",
+                      "content": "Value",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "650"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GRs0I",
+                      "name": "Stats",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "id": "hDkqi",
+                          "type": "ref",
+                          "ref": "d5Thp",
+                          "name": "Lifetime",
+                          "width": "fill_container",
+                          "descendants": {
+                            "csIn6": {
+                              "content": "Lifetime"
+                            },
+                            "hQZRo": {
+                              "content": "$4,182.00"
+                            }
+                          }
+                        },
+                        {
+                          "id": "jg1sk",
+                          "type": "ref",
+                          "ref": "d5Thp",
+                          "name": "Orders",
+                          "width": "fill_container",
+                          "descendants": {
+                            "csIn6": {
+                              "content": "Orders"
+                            },
+                            "hQZRo": {
+                              "content": "14"
+                            }
+                          }
+                        },
+                        {
+                          "id": "gtl6o",
+                          "type": "ref",
+                          "ref": "d5Thp",
+                          "name": "Avg order",
+                          "width": "fill_container",
+                          "descendants": {
+                            "csIn6": {
+                              "content": "Avg order"
+                            },
+                            "hQZRo": {
+                              "content": "$298.71"
+                            }
+                          }
+                        },
+                        {
+                          "id": "cVb5b",
+                          "type": "ref",
+                          "ref": "d5Thp",
+                          "name": "Customer since",
+                          "width": "fill_container",
+                          "descendants": {
+                            "csIn6": {
+                              "content": "Customer since"
+                            },
+                            "hQZRo": {
+                              "content": "Mar 2025"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "w303H",
+                  "name": "Consent Card",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#1A1A1A12",
+                    "offset": {
+                      "x": 0,
+                      "y": 1
+                    }
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "sbe3H",
+                      "name": "Card Title",
+                      "fill": "$text",
+                      "content": "Consent",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "650"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MlJdm",
+                      "name": "Badge Row",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hG0ll",
+                          "name": "Badge",
+                          "fill": "$success-bg",
+                          "cornerRadius": 8,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "xjGSH",
+                              "name": "Badge Label",
+                              "fill": "$success-text",
+                              "content": "Subscribed",
+                              "lineHeight": 1.4,
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
+  "variables": {
+    "bg-app": {
+      "type": "color",
+      "value": "#F1F1F1"
+    },
+    "bg-surface": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "bg-surface-secondary": {
+      "type": "color",
+      "value": "#F7F7F7"
+    },
+    "bg-input": {
+      "type": "color",
+      "value": "#FDFDFD"
+    },
+    "border": {
+      "type": "color",
+      "value": "#E3E3E3"
+    },
+    "border-strong": {
+      "type": "color",
+      "value": "#8A8A8A"
+    },
+    "text": {
+      "type": "color",
+      "value": "#303030"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#616161"
+    },
+    "text-disabled": {
+      "type": "color",
+      "value": "#8A8A8A"
+    },
+    "text-on-inverse": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "link": {
+      "type": "color",
+      "value": "#005BD3"
+    },
+    "primary": {
+      "type": "color",
+      "value": "#303030"
+    },
+    "success-bg": {
+      "type": "color",
+      "value": "#CDFEE1"
+    },
+    "success-text": {
+      "type": "color",
+      "value": "#0C5132"
+    },
+    "font": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "radius-card": {
+      "type": "number",
+      "value": 12
+    },
+    "radius-control": {
+      "type": "number",
+      "value": 8
+    }
+  },
   "fileToken": "b9981d24-93af-4b65-8975-b944403d40a5"
 }
