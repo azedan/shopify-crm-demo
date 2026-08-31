@@ -52,6 +52,7 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^10.0.1",
     "prettier": "^3.2.4",
+    "tsx": "^4.23.13",
     "typescript": "^5.2.2",
     "vite": "^6.2.2",
     "vitest": "^4.1.11"
@@ -76,5 +77,8 @@
     "minimatch": "9.0.5",
     "vite": "^6.2.2"
   },
-  "author": "ahmed"
+  "author": "ahmed",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
 }
