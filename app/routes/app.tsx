@@ -21,10 +21,13 @@ export default function App() {
   return (
     <AppProvider isEmbeddedApp apiKey={apiKey}>
       <NavMenu>
+        {/* App Bridge requires a rel="home" link first. It addresses the app
+            root, which redirects to the list; "Customers" below is the nav
+            entry for the demo's actual screen. */}
         <Link to="/app" rel="home">
           Home
         </Link>
-        <Link to="/app/additional">Additional page</Link>
+        <Link to="/app/customers">Customers</Link>
       </NavMenu>
       <Outlet />
     </AppProvider>
