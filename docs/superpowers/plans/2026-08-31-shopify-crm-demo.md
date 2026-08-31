@@ -1272,14 +1272,29 @@ The `as never` casts bridge Prisma's `string` columns to the narrower `Interacti
 
 ```bash
 npx tsc --noEmit
-npx tsx -e "
-import { listCustomers, getCustomerDetail } from './app/crm/queries.server';
+```
+
+Expected: zero errors under `app/crm`. One pre-existing error in
+`app/shopify.server.ts` comes from the template's own dependency tree (two copies
+of `@shopify/shopify-api` with incompatible `AuthScopes` private fields) — it is
+not yours and must not be "fixed".
+
+Then exercise both functions against the seeded database. **Write this to a file
+rather than passing it to `tsx -e`** — `-e` forces CJS output, which rejects the
+top-level `await` these calls need:
+
+```bash
+cat > /tmp/verify-task5.mts <<'EOF'
+import { listCustomers, getCustomerDetail } from "./app/crm/queries.server";
+
 const rows = await listCustomers();
-console.log('rows', rows.length, '| first:', rows[0].firstName, rows[0].orderCount, 'orders');
+console.log("rows", rows.length, "| first:", rows[0].firstName, rows[0].orderCount, "orders");
 const detail = await getCustomerDetail(rows[0].id);
-console.log('timeline events', detail?.timeline.length);
-console.log('search hit', (await listCustomers(rows[0].email)).length);
-"
+console.log("timeline events", detail?.timeline.length);
+console.log("search hit", (await listCustomers(rows[0].email)).length);
+EOF
+npx tsx /tmp/verify-task5.mts
+rm -f /tmp/verify-task5.mts
 ```
 
 Expected: 60 rows, a non-zero timeline length, and exactly 1 search hit.
