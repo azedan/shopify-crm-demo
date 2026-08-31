@@ -20,7 +20,11 @@ Every task's requirements implicitly include this section.
 - **The app never calls the Shopify Admin API for CRM data.** Not for customers, orders, or events. If a task seems to need it, the task is wrong.
 - **UI is Polaris components only.** No hand-rolled CSS files, no other component library.
 - **Order invariant:** `cancelledAt` is mutually exclusive with `fulfilledAt`, `deliveredAt`, and `refundedAt`. The seed generator upholds it; `buildTimeline` may assume it.
-- **Seed RNG is fixed at `20260831`.** Re-seeding must produce byte-identical data.
+- **Seed RNG is fixed at `20260831`, and every seeded row gets an explicit id.**
+  Re-seeding must produce byte-identical data. Seeded rows must never fall
+  through to Prisma's `cuid()` default — the timeline breaks timestamp ties by
+  id, so random ids would reorder the timeline between reseeds while every
+  monetary total stayed identical. Only runtime-created interactions use `cuid()`.
 - **Timeline sort:** `timestamp` descending, then source priority (order `0`, lifecycle `1`, interaction `2`), then `id` ascending.
 - **Stats:** countable orders are those with `cancelledAt === null`. Lifetime value is net of refunds. Average order value returns `0` when there are no countable orders.
 
@@ -47,16 +51,50 @@ Run from the repo root:
 npm init @shopify/app@latest -- --template remix
 ```
 
-When prompted: name the app `shopify-crm-demo`, choose your dev organization, and let it create a new app. The template installs into a subdirectory named after the app — move its contents to the repo root if so, since the spec and plan live at the root.
+When prompted: name the app **`crm-app`** (not `shopify-crm-demo` — a predictable
+subdirectory name that cannot collide with the repo root), choose your dev
+organization, and let it create a new app.
 
-Then verify the scaffold is real:
+The template installs into `crm-app/`. Move it to the repo root with these exact
+steps — the repo is public and already has history, so none of this is optional:
+
+```bash
+SCAFFOLD=crm-app
+test -d "$SCAFFOLD" || { echo "No $SCAFFOLD/ — use the directory the template actually created"; exit 1; }
+
+# 1. Drop the nested git repo. This repo already has history and a remote.
+rm -rf "$SCAFFOLD/.git"
+
+# 2. Merge the two .gitignore files as a union, template first.
+#    A plain move would CLOBBER ours, un-ignoring .superpowers/ — which
+#    Step 5's `git add -A` would then push to a public repo.
+{
+  cat "$SCAFFOLD/.gitignore"
+  echo
+  echo "# --- project ---"
+  cat .gitignore
+} > .gitignore.merged
+mv .gitignore.merged .gitignore
+rm -f "$SCAFFOLD/.gitignore"
+
+# 3. Move everything up, dotfiles included. tar rather than `mv *`,
+#    which silently skips dotfiles unless dotglob is set.
+(cd "$SCAFFOLD" && tar cf - .) | tar xf -
+rm -rf "$SCAFFOLD"
+```
+
+Verify the scaffold landed **and that nothing sensitive became committable**:
 
 ```bash
 ls app/routes/app._index.tsx prisma/schema.prisma
-cat package.json | grep '"@shopify/polaris"'
+grep '"@shopify/polaris"' package.json
+git check-ignore -q .superpowers/ && echo "OK .superpowers ignored" || echo "FAIL .superpowers NOT ignored"
+git check-ignore -q .env         && echo "OK .env ignored"         || echo "FAIL .env NOT ignored"
 ```
 
-Expected: both files exist, and Polaris appears in dependencies.
+Expected: both files exist, Polaris appears in dependencies, and **both
+`check-ignore` lines print OK.** If either prints FAIL, stop and fix `.gitignore`
+before Step 5 — `.env` holds your Shopify API secret and this repo is public.
 
 - [ ] **Step 2: Add the four CRM models to the Prisma schema**
 
@@ -146,8 +184,17 @@ Expected: `function function function function`
 
 - [ ] **Step 5: Commit**
 
+Re-check the ignores first. `git add -A` on a public repo is the point of no
+return, and Step 1's merge is the only thing standing between you and a
+committed `.env`:
+
 ```bash
+git check-ignore -q .superpowers/ && git check-ignore -q .env \
+  && echo "safe to add" \
+  || { echo "STOP — fix .gitignore before committing"; exit 1; }
+
 git add -A
+git status --short | head -20   # eyeball this: no .env, no .superpowers/
 git commit -m "feat: scaffold Shopify app and add CRM schema"
 ```
 
@@ -885,6 +932,10 @@ async function main() {
 
     const customer = await prisma.customer.create({
       data: {
+        // Explicit deterministic id. The cuid() default would be random per
+        // reseed, and buildTimeline breaks timestamp ties by id — so random
+        // ids would silently reorder the timeline between reseeds.
+        id: `c${n}`,
         firstName,
         lastName,
         email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${n}@example.com`,
@@ -905,6 +956,7 @@ async function main() {
       if (cancelled) {
         await prisma.order.create({
           data: {
+            id: `o${orderSeq}`,
             customerId: customer.id,
             orderNumber: String(orderSeq),
             totalCents,
@@ -922,6 +974,7 @@ async function main() {
 
       await prisma.order.create({
         data: {
+          id: `o${orderSeq}`,
           customerId: customer.id,
           orderNumber: String(orderSeq),
           totalCents,
@@ -947,6 +1000,7 @@ async function main() {
       const anchor = pick(placedAts);
       await prisma.interaction.create({
         data: {
+          id: `i${n}-${i}`,
           customerId: customer.id,
           type: pick([...INTERACTION_TYPES]),
           body: pick(BODIES),
@@ -959,6 +1013,7 @@ async function main() {
 
     await prisma.lifecycleEvent.create({
       data: {
+        id: `l${n}-created`,
         customerId: customer.id,
         kind: "account_created",
         occurredAt: accountCreatedAt,
@@ -968,6 +1023,7 @@ async function main() {
     if (marketingConsent) {
       await prisma.lifecycleEvent.create({
         data: {
+          id: `l${n}-consent`,
           customerId: customer.id,
           kind: "consent_granted",
           occurredAt: new Date(accountCreatedAt.getTime() + between(1, 10) * DAY),
@@ -979,6 +1035,7 @@ async function main() {
     if (archetype.name === "churn") {
       await prisma.lifecycleEvent.create({
         data: {
+          id: `l${n}-abandoned`,
           customerId: customer.id,
           kind: "abandoned_checkout",
           amountCents: between(4000, 32000),
@@ -1040,18 +1097,51 @@ Expected: 60 customers, several hundred orders, and **`invariant violations (mus
 
 - [ ] **Step 5: Verify the seed is deterministic**
 
-```bash
-node -e "const {PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.order.aggregate({_sum:{totalCents:true}}).then(r=>{console.log('checksum',r._sum.totalCents);return p.\$disconnect()})"
-npx prisma db seed
-node -e "const {PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.order.aggregate({_sum:{totalCents:true}}).then(r=>{console.log('checksum',r._sum.totalCents);return p.\$disconnect()})"
+Create `scripts/seed-digest.mjs`:
+
+```js
+import { createHash } from "node:crypto";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+// Digest ids and timestamps, not just amounts. buildTimeline breaks
+// timestamp ties by id, so non-deterministic ids reorder the timeline
+// while every monetary total stays identical — a checksum over amounts
+// alone would report success on exactly the bug this guards against.
+const rows = [
+  ...(await prisma.customer.findMany({ orderBy: { id: "asc" } })).map(
+    (c) => `c|${c.id}|${c.createdAt.toISOString()}`,
+  ),
+  ...(await prisma.order.findMany({ orderBy: { id: "asc" } })).map(
+    (o) => `o|${o.id}|${o.customerId}|${o.totalCents}|${o.placedAt.toISOString()}`,
+  ),
+  ...(await prisma.interaction.findMany({ orderBy: { id: "asc" } })).map(
+    (i) => `i|${i.id}|${i.customerId}|${i.type}|${i.occurredAt.toISOString()}`,
+  ),
+  ...(await prisma.lifecycleEvent.findMany({ orderBy: { id: "asc" } })).map(
+    (l) => `l|${l.id}|${l.customerId}|${l.kind}|${l.occurredAt.toISOString()}`,
+  ),
+];
+
+console.log(createHash("sha256").update(rows.join("\n")).digest("hex"));
+await prisma.$disconnect();
 ```
 
-Expected: the two checksums are identical. If they differ, the RNG is being seeded more than once or `Math.random` leaked in somewhere — fix before moving on, because every later task assumes stable data.
+Then run it, reseed, and run it again:
+
+```bash
+node scripts/seed-digest.mjs
+npx prisma db seed
+node scripts/seed-digest.mjs
+```
+
+Expected: **the two hashes are identical.** If they differ, either an id is still falling through to `cuid()`, the RNG is being seeded more than once, or `Math.random` leaked in. Fix before moving on — every later task assumes stable data, and the timeline tie-break test in Task 2 assumes stable ids.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add prisma/seed.ts package.json package-lock.json
+git add prisma/seed.ts scripts/seed-digest.mjs package.json package-lock.json
 git commit -m "feat: add deterministic seed data across five customer archetypes"
 ```
 
