@@ -48,6 +48,14 @@ export function Timeline({ events }: { events: SerializedEvent[] }) {
                   opacity: 0.7,
                 }}
               />
+              {/* Filled vs hollow is the product's central claim, and it lives
+                  only in the marker's background colour. Without this label a
+                  screen-reader user gets none of it. */}
+              <Text as="span" visuallyHidden>
+                {event.source === "shopify"
+                  ? "From Shopify"
+                  : "Logged in this app"}
+              </Text>
             </Box>
             <BlockStack gap="050">
               <Text as="span" fontWeight="semibold">
