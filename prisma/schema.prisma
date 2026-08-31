@@ -32,3 +32,64 @@ model Session {
   refreshToken        String?
   refreshTokenExpires DateTime?
 }
+
+model Customer {
+  id                String   @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String   @unique
+  phone             String?
+  city              String
+  region            String
+  marketingConsent  Boolean  @default(false)
+  createdAt         DateTime
+
+  orders            Order[]
+  interactions      Interaction[]
+  lifecycleEvents   LifecycleEvent[]
+}
+
+model Order {
+  id                String    @id @default(cuid())
+  customerId        String
+  orderNumber       String
+  totalCents        Int
+  currency          String    @default("USD")
+  itemCount         Int
+  placedAt          DateTime
+  fulfilledAt       DateTime?
+  deliveredAt       DateTime?
+  refundedAt        DateTime?
+  refundAmountCents Int?
+  cancelledAt       DateTime?
+
+  customer          Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model Interaction {
+  id          String   @id @default(cuid())
+  customerId  String
+  type        String
+  body        String?
+  outcome     String?
+  author      String
+  occurredAt  DateTime
+
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model LifecycleEvent {
+  id          String   @id @default(cuid())
+  customerId  String
+  kind        String
+  amountCents Int?
+  occurredAt  DateTime
+
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
