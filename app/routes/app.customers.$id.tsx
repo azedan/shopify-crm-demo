@@ -1,18 +1,24 @@
 import { json } from "@remix-run/node";
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { Form, useActionData, useLoaderData, useNavigate, useNavigation } from "@remix-run/react";
 import {
   Badge,
   BlockStack,
+  Button,
   Card,
   EmptyState,
+  InlineError,
   InlineGrid,
   InlineStack,
   Layout,
   Page,
+  Select,
   Text,
+  TextField,
 } from "@shopify/polaris";
+import { useState } from "react";
 import { Timeline } from "../components/Timeline";
+import { logInteraction, validateInteraction } from "../crm/interactions.server";
 import { getCustomerDetail } from "../crm/queries.server";
 import { authenticate } from "../shopify.server";
 
@@ -20,6 +26,23 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
   const detail = await getCustomerDetail(params.id!);
   return json({ detail });
+};
+
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  await authenticate.admin(request);
+
+  const form = await request.formData();
+  const result = validateInteraction({
+    type: String(form.get("type") ?? ""),
+    body: String(form.get("body") ?? ""),
+  });
+
+  if (!result.ok) {
+    return json({ error: result.error }, { status: 400 });
+  }
+
+  await logInteraction(params.id!, result.value);
+  return json({ error: null });
 };
 
 function money(cents: number) {
@@ -45,6 +68,11 @@ function Stat({ label, value }: { label: string; value: string }) {
 export default function CustomerDetail() {
   const { detail } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
+  const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+  const submitting = navigation.state === "submitting";
+  const [type, setType] = useState("call");
+  const [body, setBody] = useState("");
 
   if (!detail) {
     return (
@@ -74,6 +102,51 @@ export default function CustomerDetail() {
     >
       <Layout>
         <Layout.Section>
+          <Card>
+            <Form method="post" onSubmit={() => setBody("")}>
+              <BlockStack gap="300">
+                <Text as="h2" variant="headingSm">
+                  Log an interaction
+                </Text>
+                <InlineStack gap="200" blockAlign="end" wrap={false}>
+                  <div style={{ width: 140 }}>
+                    <Select
+                      label="Type"
+                      labelHidden
+                      name="type"
+                      value={type}
+                      onChange={setType}
+                      options={[
+                        { label: "Call", value: "call" },
+                        { label: "Email", value: "email" },
+                        { label: "DM", value: "dm" },
+                        { label: "Note", value: "note" },
+                      ]}
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <TextField
+                      label="What happened?"
+                      labelHidden
+                      name="body"
+                      value={body}
+                      onChange={setBody}
+                      placeholder="What happened?"
+                      autoComplete="off"
+                      maxLength={2000}
+                    />
+                  </div>
+                  <Button submit variant="primary" loading={submitting}>
+                    Log it
+                  </Button>
+                </InlineStack>
+                {actionData?.error ? (
+                  <InlineError message={actionData.error} fieldID="body" />
+                ) : null}
+              </BlockStack>
+            </Form>
+          </Card>
+
           <Card>
             <BlockStack gap="300">
               <Text as="h2" variant="headingSm">
