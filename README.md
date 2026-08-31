@@ -104,6 +104,13 @@ The seed generates VIP repeat buyers, steady regulars, one-time buyers, churn
 risks, and refund-heavy customers, so the list has visible texture rather than
 uniform noise.
 
+Two things worth knowing before you run it:
+
+- **The seed's "now" is pinned to 2026-08-31.** Relative times on the screens
+  are computed against the real clock, so they decay as real time passes. Bump
+  `NOW` in `prisma/seed.ts` and re-seed if you are demoing much later.
+- **`npm run dev` has not been exercised on this branch** — see Status below.
+
 ## Design docs
 
 This project was designed before it was built, and both documents are in the
@@ -116,12 +123,21 @@ repo:
 
 ## Status
 
-Under construction. The scaffold and database schema are in place; the timeline
-merge, seed data, and UI are being built out task by task against the plan above.
+Feature-complete against the design spec. The schema and migration, the
+timeline merge, the derived stats, the seed generator, both screens, and the
+single write path are all built. The 27-test suite passes (`npm test`),
+`npm run lint` is clean, and `npx tsc --noEmit` reports only one pre-existing
+template type clash in `app/shopify.server.ts` (the scaffold ships two copies of
+`@shopify/shopify-api`).
+
+**It has never been opened in a browser.** Nothing here has run under
+`shopify app dev` against a real dev store. The logic is covered by tests, but
+the rendering, the App Bridge embedding, and the form round-trip have not been
+observed. Boot it once before you demo it.
 
 ## License
 
-MIT.
+MIT — full text in [LICENSE](LICENSE).
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
