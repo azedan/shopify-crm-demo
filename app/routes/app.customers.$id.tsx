@@ -102,59 +102,63 @@ export default function CustomerDetail() {
     >
       <Layout>
         <Layout.Section>
-          <Card>
-            <Form method="post" onSubmit={() => setBody("")}>
+          {/* Layout.Section puts no gap between its children, so sibling Cards
+              would render flush. The sidebar section below does the same. */}
+          <BlockStack gap="400">
+            <Card>
+              <Form method="post" onSubmit={() => setBody("")}>
+                <BlockStack gap="300">
+                  <Text as="h2" variant="headingSm">
+                    Log an interaction
+                  </Text>
+                  <InlineStack gap="200" blockAlign="end" wrap={false}>
+                    <div style={{ width: 140 }}>
+                      <Select
+                        label="Type"
+                        labelHidden
+                        name="type"
+                        value={type}
+                        onChange={setType}
+                        options={[
+                          { label: "Call", value: "call" },
+                          { label: "Email", value: "email" },
+                          { label: "DM", value: "dm" },
+                          { label: "Note", value: "note" },
+                        ]}
+                      />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <TextField
+                        label="What happened?"
+                        labelHidden
+                        name="body"
+                        value={body}
+                        onChange={setBody}
+                        placeholder="What happened?"
+                        autoComplete="off"
+                        maxLength={2000}
+                      />
+                    </div>
+                    <Button submit variant="primary" loading={submitting}>
+                      Log it
+                    </Button>
+                  </InlineStack>
+                  {actionData?.error ? (
+                    <InlineError message={actionData.error} fieldID="body" />
+                  ) : null}
+                </BlockStack>
+              </Form>
+            </Card>
+
+            <Card>
               <BlockStack gap="300">
                 <Text as="h2" variant="headingSm">
-                  Log an interaction
+                  Timeline
                 </Text>
-                <InlineStack gap="200" blockAlign="end" wrap={false}>
-                  <div style={{ width: 140 }}>
-                    <Select
-                      label="Type"
-                      labelHidden
-                      name="type"
-                      value={type}
-                      onChange={setType}
-                      options={[
-                        { label: "Call", value: "call" },
-                        { label: "Email", value: "email" },
-                        { label: "DM", value: "dm" },
-                        { label: "Note", value: "note" },
-                      ]}
-                    />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <TextField
-                      label="What happened?"
-                      labelHidden
-                      name="body"
-                      value={body}
-                      onChange={setBody}
-                      placeholder="What happened?"
-                      autoComplete="off"
-                      maxLength={2000}
-                    />
-                  </div>
-                  <Button submit variant="primary" loading={submitting}>
-                    Log it
-                  </Button>
-                </InlineStack>
-                {actionData?.error ? (
-                  <InlineError message={actionData.error} fieldID="body" />
-                ) : null}
+                <Timeline events={timeline} />
               </BlockStack>
-            </Form>
-          </Card>
-
-          <Card>
-            <BlockStack gap="300">
-              <Text as="h2" variant="headingSm">
-                Timeline
-              </Text>
-              <Timeline events={timeline} />
-            </BlockStack>
-          </Card>
+            </Card>
+          </BlockStack>
         </Layout.Section>
 
         <Layout.Section variant="oneThird">
