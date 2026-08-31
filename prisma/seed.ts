@@ -39,6 +39,18 @@ const ARCHETYPES = [
 const DAY = 24 * 60 * 60 * 1000;
 const NOW = new Date("2026-08-31T12:00:00Z").getTime();
 
+// Every timestamp that walks FORWARD from an anchor goes through here, and the
+// offset is capped by the room left before NOW. The room is ample in practice;
+// the cap is what makes "the seed contains no future-dated events" a property
+// of the generator rather than a property of one lucky RNG sequence. Exactly
+// one `between` draw either way, so the sequence stays deterministic.
+function after(anchorMs: number, minDays: number, maxDays: number) {
+  const room = Math.max(0, Math.floor((NOW - anchorMs) / DAY));
+  const hi = Math.min(maxDays, room);
+  const lo = Math.min(minDays, hi);
+  return anchorMs + between(lo, hi) * DAY;
+}
+
 const INTERACTION_TYPES = ["call", "email", "dm", "note"] as const;
 const BODIES = [
   "Asked about resizing", "Wanted a shipping update", "Requested a gift note",
@@ -65,16 +77,62 @@ async function main() {
     const trailingGapDays = archetype.name === "churn" ? between(120, 300) : between(2, 20);
     const orderCount = between(archetype.orders[0], archetype.orders[1]);
 
-    // Walk backwards from the most recent order to the first.
-    const placedAts: number[] = [];
+    // Walk backwards from the most recent order to the first. Each cursor value
+    // is that order's LAST event, not its first — placedAt is then derived by
+    // walking back through the fulfil/deliver/refund offsets. Anchoring from
+    // the start instead let any order whose trailing gap was shorter than its
+    // own forward walk (up to 18 days) push fabricated events past NOW, where
+    // both relative-time helpers render them as "Today".
+    const lastTouches: number[] = [];
     let cursor = NOW - trailingGapDays * DAY;
     for (let i = 0; i < orderCount; i++) {
-      placedAts.push(cursor);
+      lastTouches.push(cursor);
       cursor -= between(archetype.gapDays[0], archetype.gapDays[1] || 30) * DAY;
     }
-    placedAts.reverse();
+    lastTouches.reverse();
 
-    const accountCreatedAt = new Date(placedAts[0] - between(3, 40) * DAY);
+    const orders = lastTouches.map((lastTouch) => {
+      const totalCents = between(2400, 38000);
+      const itemCount = between(1, 5);
+
+      // Invariant: cancelled orders never fulfil, deliver, or refund.
+      if (random() < archetype.cancelRate) {
+        return {
+          totalCents,
+          itemCount,
+          placedAt: lastTouch - between(1, 3) * DAY,
+          fulfilledAt: null,
+          deliveredAt: null,
+          refundedAt: null,
+          refundAmountCents: null,
+          cancelledAt: lastTouch,
+        };
+      }
+
+      const refunded = random() < archetype.refundRate;
+      const deliveredAt = refunded ? lastTouch - between(2, 10) * DAY : lastTouch;
+      const fulfilledAt = deliveredAt - between(1, 5) * DAY;
+
+      return {
+        totalCents,
+        itemCount,
+        placedAt: fulfilledAt - between(1, 3) * DAY,
+        fulfilledAt,
+        deliveredAt,
+        refundedAt: refunded ? lastTouch : null,
+        refundAmountCents: refunded
+          ? Math.round(totalCents * (random() < 0.5 ? 0.35 : 1))
+          : null,
+        cancelledAt: null,
+      };
+    });
+
+    // Chains can overlap by a few days, so take the extremes rather than the
+    // first and last elements.
+    const firstPlacedAt = Math.min(...orders.map((o) => o.placedAt));
+    const lastTouchedAt = lastTouches[lastTouches.length - 1];
+
+    const accountCreatedAt = new Date(firstPlacedAt - between(3, 40) * DAY);
     const marketingConsent = random() > 0.35;
 
     const customer = await prisma.customer.create({
@@ -94,47 +152,21 @@ async function main() {
       },
     });
 
-    for (const placedMs of placedAts) {
+    for (const order of orders) {
       orderSeq += 1;
-      const totalCents = between(2400, 38000);
-      const cancelled = random() < archetype.cancelRate;
-
-      // Invariant: cancelled orders never fulfil, deliver, or refund.
-      if (cancelled) {
-        await prisma.order.create({
-          data: {
-            id: `o${orderSeq}`,
-            customerId: customer.id,
-            orderNumber: String(orderSeq),
-            totalCents,
-            itemCount: between(1, 5),
-            placedAt: new Date(placedMs),
-            cancelledAt: new Date(placedMs + between(1, 3) * DAY),
-          },
-        });
-        continue;
-      }
-
-      const fulfilledAt = new Date(placedMs + between(1, 3) * DAY);
-      const deliveredAt = new Date(fulfilledAt.getTime() + between(1, 5) * DAY);
-      const refunded = random() < archetype.refundRate;
-
       await prisma.order.create({
         data: {
           id: `o${orderSeq}`,
           customerId: customer.id,
           orderNumber: String(orderSeq),
-          totalCents,
-          itemCount: between(1, 5),
-          placedAt: new Date(placedMs),
-          fulfilledAt,
-          deliveredAt,
-          refundedAt: refunded
-            ? new Date(deliveredAt.getTime() + between(2, 10) * DAY)
-            : null,
-          refundAmountCents: refunded
-            ? Math.round(totalCents * (random() < 0.5 ? 0.35 : 1))
-            : null,
+          totalCents: order.totalCents,
+          itemCount: order.itemCount,
+          placedAt: new Date(order.placedAt),
+          fulfilledAt: order.fulfilledAt === null ? null : new Date(order.fulfilledAt),
+          deliveredAt: order.deliveredAt === null ? null : new Date(order.deliveredAt),
+          refundedAt: order.refundedAt === null ? null : new Date(order.refundedAt),
+          refundAmountCents: order.refundAmountCents,
+          cancelledAt: order.cancelledAt === null ? null : new Date(order.cancelledAt),
         },
       });
     }
@@ -144,7 +176,7 @@ async function main() {
       archetype.interactions[1],
     );
     for (let i = 0; i < interactionCount; i++) {
-      const anchor = pick(placedAts);
+      const anchor = pick(orders).placedAt;
       await prisma.interaction.create({
         data: {
           id: `i${n}-${i}`,
@@ -153,7 +185,7 @@ async function main() {
           body: pick(BODIES),
           outcome: pick(OUTCOMES),
           author: pick(["Ahmed", "Sam", "Rosa"]),
-          occurredAt: new Date(anchor + between(1, 6) * DAY),
+          occurredAt: new Date(after(anchor, 1, 6)),
         },
       });
     }
@@ -173,7 +205,7 @@ async function main() {
           id: `l${n}-consent`,
           customerId: customer.id,
           kind: "consent_granted",
-          occurredAt: new Date(accountCreatedAt.getTime() + between(1, 10) * DAY),
+          occurredAt: new Date(after(accountCreatedAt.getTime(), 1, 10)),
         },
       });
     }
@@ -186,7 +218,7 @@ async function main() {
           customerId: customer.id,
           kind: "abandoned_checkout",
           amountCents: between(4000, 32000),
-          occurredAt: new Date(placedAts[placedAts.length - 1] + between(5, 25) * DAY),
+          occurredAt: new Date(after(lastTouchedAt, 5, 25)),
         },
       });
     }
