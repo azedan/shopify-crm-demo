@@ -1871,7 +1871,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 - [ ] **Step 6: Add the form above the timeline**
 
-Inside the component, below the existing `const { customer, stats, timeline } = detail;` line:
+Inside the component, add these hooks **immediately after `useLoaderData` and
+BEFORE the `if (!detail)` early return** — not after the
+`const { customer, stats, timeline } = detail;` line:
+
+> **Why the placement matters.** Task 7's component returns an `EmptyState`
+> early when `detail` is null. Hooks placed after that return would be called
+> conditionally, violating React's Rules of Hooks — the component crashes as
+> soon as a user navigates between a found and a not-found customer, because the
+> hook count changes between renders. Hooks must run unconditionally on every
+> render path.
 
 ```tsx
   const actionData = useActionData<typeof action>();
