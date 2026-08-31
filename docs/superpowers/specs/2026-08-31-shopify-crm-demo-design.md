@@ -1,7 +1,7 @@
 # Shopify CRM Demo — Design
 
 **Date:** 2026-08-31
-**Status:** Draft — awaiting review
+**Status:** Approved — 2026-08-31
 **Destination:** Demo / proof-of-concept
 
 ## Purpose
