@@ -130,10 +130,28 @@ single write path are all built. The 27-test suite passes (`npm test`),
 template type clash in `app/shopify.server.ts` (the scaffold ships two copies of
 `@shopify/shopify-api`).
 
-**It has never been opened in a browser.** Nothing here has run under
-`shopify app dev` against a real dev store. The logic is covered by tests, but
-the rendering, the App Bridge embedding, and the form round-trip have not been
-observed. Boot it once before you demo it.
+**Verified running in Shopify admin.** It has been booted under
+`shopify app dev` against a real dev store and walked end to end: the customer
+list renders and sorts, search filters, a customer's merged timeline shows
+orders and interactions interleaved with the correct filled/hollow source
+markers, and logging an interaction writes it and surfaces it at the top of the
+feed immediately.
+
+One note if you run it yourself: `shopify app dev`'s default Cloudflare quick
+tunnel proved unreliable here — the app loaded once and then stopped receiving
+requests entirely, with no error on either side. `shopify app dev --use-localhost`
+avoids tunnels altogether and worked immediately. It needs `mkcert` installed
+(`brew install mkcert && mkcert -install`) and certs generated into `.shopify/`:
+
+```bash
+mkcert -key-file .shopify/localhost-key.pem -cert-file .shopify/localhost.pem localhost 127.0.0.1 ::1
+shopify app dev --use-localhost
+```
+
+Localhost mode is incompatible with webhook subscriptions, since Shopify has to
+reach those from outside. This app declares two inherited from the template and
+uses neither meaningfully, so comment them out of `shopify.app.toml` while using
+localhost mode.
 
 ## License
 
