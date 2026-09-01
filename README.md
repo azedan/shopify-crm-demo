@@ -62,6 +62,23 @@ layer in `app/crm/queries.server.ts` with Admin API calls and keep everything
 else. The timeline merge is a pure function over plain records and does not care
 where they came from.
 
+> ### ⚠️ Read this before adapting it: there is no tenant scoping
+>
+> `Customer`, `Order`, `Interaction`, and `LifecycleEvent` have **no `shop`
+> column**. Only the template's `Session` model is shop-scoped. Every read and
+> the single write address rows by id alone, without checking the row belongs to
+> the authenticated shop.
+>
+> That is fine for what this is — a single dev store with fake local data — and
+> it is a deliberate scoping decision, not an oversight. But if you point this at
+> real data or install it on more than one shop, **any authenticated shop could
+> read or write any other shop's customers.**
+>
+> Making it multi-tenant means adding `shop` to each model, backfilling it,
+> indexing it, and filtering on it in every query in `queries.server.ts` and
+> `interactions.server.ts`. That is real work, not a config flag. Do it before
+> the app touches anything real.
+
 ## Stack
 
 Remix, Shopify App Bridge, Polaris, Prisma + SQLite, Vitest, TypeScript.
@@ -74,18 +91,84 @@ Remix APIs. For a new project of your own, prefer
 
 ## Getting started
 
-Requires Node 20+ and the Shopify CLI.
+Requires Node 20+ and the [Shopify CLI](https://shopify.dev/docs/api/shopify-cli).
 
 ```bash
 npm install
 npx prisma migrate dev
-npx prisma db seed     # ~60 customers across five archetypes
-npm run dev            # runs `shopify app dev`
+npx prisma db seed     # 60 customers across five archetypes
 ```
 
 The seed generates VIP repeat buyers, steady regulars, one-time buyers, churn
 risks, and refund-heavy customers, so the list has visible texture rather than
-uniform noise.
+uniform noise. It is deterministic: same RNG seed, explicit row ids, byte-identical
+on every reseed.
+
+## Running the dev server
+
+You need a Shopify Partner account and a development store. The app installs
+itself on first load.
+
+### Recommended: localhost mode
+
+This is what was actually used to verify the app. It avoids tunnels entirely.
+
+**One-time setup** — installs a local certificate authority into your system
+trust store (needs sudo; reversible with `mkcert -uninstall`):
+
+```bash
+brew install mkcert
+mkcert -install
+mkcert -key-file .shopify/localhost-key.pem \
+       -cert-file .shopify/localhost.pem \
+       localhost 127.0.0.1 ::1
+```
+
+**Important:** localhost mode cannot serve webhooks, because Shopify has to reach
+those from the public internet. Comment out both `[[webhooks.subscriptions]]`
+blocks in `shopify.app.toml` before starting, or the CLI refuses with
+`Invalid value: "https://localhost:3458/webhooks/..."`. Keep the `[webhooks]`
+header itself — the CLI requires it. Restore the subscriptions when you are done.
+
+```bash
+shopify app dev --use-localhost
+```
+
+Pick your dev store when prompted. Then open the Preview URL it prints. If the
+app frame shows a login form, that is expected on a fresh session — enter your
+store domain (`your-store.myshopify.com`) and it will complete OAuth and land on
+the customer list.
+
+### Alternative: the default tunnel
+
+```bash
+npm run dev            # runs `shopify app dev`
+```
+
+This uses a Cloudflare quick tunnel. **It was unreliable during development** —
+the app served exactly one request and then stopped receiving traffic entirely,
+across three freshly created tunnels, with no error on either the Shopify side or
+the app side. The server logged nothing because nothing reached it. If you see a
+blank app frame in admin, this is the first thing to suspect; switch to localhost
+mode above.
+
+### Walking the demo
+
+Six steps, and they exercise everything:
+
+1. Customer list loads, sorted by last activity
+2. Search by name or email
+3. Click a customer
+4. Read the merged timeline — filled markers are Shopify-sourced (orders,
+   lifecycle), hollow are CRM-sourced (calls, emails, notes)
+5. Log an interaction with the form above the feed
+6. It appears at the top of the timeline immediately
+
+### One gotcha
+
+**The seed's "now" is pinned to 2026-08-31.** Relative times on screen are
+computed against the real clock, so they drift as real time passes. Bump `NOW`
+in `prisma/seed.ts` and re-seed if you are demoing much later.
 
 ## Design docs
 
@@ -99,12 +182,20 @@ repo:
 
 ## Status
 
-Under construction. The scaffold and database schema are in place; the timeline
-merge, seed data, and UI are being built out task by task against the plan above.
+Feature-complete against the design spec. The schema and migration, the
+timeline merge, the derived stats, the seed generator, both screens, and the
+single write path are all built. The 27-test suite passes (`npm test`),
+`npm run lint` is clean, and `npx tsc --noEmit` reports only one pre-existing
+template type clash in `app/shopify.server.ts` (the scaffold ships two copies of
+`@shopify/shopify-api`).
+
+**Verified running in Shopify admin** — booted against a real development store
+and walked through all six steps above. See
+[Running the dev server](#running-the-dev-server) to reproduce it.
 
 ## License
 
-MIT.
+MIT — full text in [LICENSE](LICENSE).
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS

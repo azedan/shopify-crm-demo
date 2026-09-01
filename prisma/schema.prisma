@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.sqlite"
+}
+
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName            String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model Customer {
+  id                String   @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String   @unique
+  phone             String?
+  city              String
+  region            String
+  marketingConsent  Boolean  @default(false)
+  createdAt         DateTime
+
+  orders            Order[]
+  interactions      Interaction[]
+  lifecycleEvents   LifecycleEvent[]
+}
+
+model Order {
+  id                String    @id @default(cuid())
+  customerId        String
+  orderNumber       String
+  totalCents        Int
+  currency          String    @default("USD")
+  itemCount         Int
+  placedAt          DateTime
+  fulfilledAt       DateTime?
+  deliveredAt       DateTime?
+  refundedAt        DateTime?
+  refundAmountCents Int?
+  cancelledAt       DateTime?
+
+  customer          Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model Interaction {
+  id          String   @id @default(cuid())
+  customerId  String
+  type        String
+  body        String?
+  outcome     String?
+  author      String
+  occurredAt  DateTime
+
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model LifecycleEvent {
+  id          String   @id @default(cuid())
+  customerId  String
+  kind        String
+  amountCents Int?
+  occurredAt  DateTime
+
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
