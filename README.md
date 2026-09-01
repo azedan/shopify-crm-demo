@@ -91,25 +91,84 @@ Remix APIs. For a new project of your own, prefer
 
 ## Getting started
 
-Requires Node 20+ and the Shopify CLI.
+Requires Node 20+ and the [Shopify CLI](https://shopify.dev/docs/api/shopify-cli).
 
 ```bash
 npm install
 npx prisma migrate dev
-npx prisma db seed     # ~60 customers across five archetypes
-npm run dev            # runs `shopify app dev`
+npx prisma db seed     # 60 customers across five archetypes
 ```
 
 The seed generates VIP repeat buyers, steady regulars, one-time buyers, churn
 risks, and refund-heavy customers, so the list has visible texture rather than
-uniform noise.
+uniform noise. It is deterministic: same RNG seed, explicit row ids, byte-identical
+on every reseed.
 
-Two things worth knowing before you run it:
+## Running the dev server
 
-- **The seed's "now" is pinned to 2026-08-31.** Relative times on the screens
-  are computed against the real clock, so they decay as real time passes. Bump
-  `NOW` in `prisma/seed.ts` and re-seed if you are demoing much later.
-- **`npm run dev` has not been exercised on this branch** — see Status below.
+You need a Shopify Partner account and a development store. The app installs
+itself on first load.
+
+### Recommended: localhost mode
+
+This is what was actually used to verify the app. It avoids tunnels entirely.
+
+**One-time setup** — installs a local certificate authority into your system
+trust store (needs sudo; reversible with `mkcert -uninstall`):
+
+```bash
+brew install mkcert
+mkcert -install
+mkcert -key-file .shopify/localhost-key.pem \
+       -cert-file .shopify/localhost.pem \
+       localhost 127.0.0.1 ::1
+```
+
+**Important:** localhost mode cannot serve webhooks, because Shopify has to reach
+those from the public internet. Comment out both `[[webhooks.subscriptions]]`
+blocks in `shopify.app.toml` before starting, or the CLI refuses with
+`Invalid value: "https://localhost:3458/webhooks/..."`. Keep the `[webhooks]`
+header itself — the CLI requires it. Restore the subscriptions when you are done.
+
+```bash
+shopify app dev --use-localhost
+```
+
+Pick your dev store when prompted. Then open the Preview URL it prints. If the
+app frame shows a login form, that is expected on a fresh session — enter your
+store domain (`your-store.myshopify.com`) and it will complete OAuth and land on
+the customer list.
+
+### Alternative: the default tunnel
+
+```bash
+npm run dev            # runs `shopify app dev`
+```
+
+This uses a Cloudflare quick tunnel. **It was unreliable during development** —
+the app served exactly one request and then stopped receiving traffic entirely,
+across three freshly created tunnels, with no error on either the Shopify side or
+the app side. The server logged nothing because nothing reached it. If you see a
+blank app frame in admin, this is the first thing to suspect; switch to localhost
+mode above.
+
+### Walking the demo
+
+Six steps, and they exercise everything:
+
+1. Customer list loads, sorted by last activity
+2. Search by name or email
+3. Click a customer
+4. Read the merged timeline — filled markers are Shopify-sourced (orders,
+   lifecycle), hollow are CRM-sourced (calls, emails, notes)
+5. Log an interaction with the form above the feed
+6. It appears at the top of the timeline immediately
+
+### One gotcha
+
+**The seed's "now" is pinned to 2026-08-31.** Relative times on screen are
+computed against the real clock, so they drift as real time passes. Bump `NOW`
+in `prisma/seed.ts` and re-seed if you are demoing much later.
 
 ## Design docs
 
@@ -130,28 +189,9 @@ single write path are all built. The 27-test suite passes (`npm test`),
 template type clash in `app/shopify.server.ts` (the scaffold ships two copies of
 `@shopify/shopify-api`).
 
-**Verified running in Shopify admin.** It has been booted under
-`shopify app dev` against a real dev store and walked end to end: the customer
-list renders and sorts, search filters, a customer's merged timeline shows
-orders and interactions interleaved with the correct filled/hollow source
-markers, and logging an interaction writes it and surfaces it at the top of the
-feed immediately.
-
-One note if you run it yourself: `shopify app dev`'s default Cloudflare quick
-tunnel proved unreliable here — the app loaded once and then stopped receiving
-requests entirely, with no error on either side. `shopify app dev --use-localhost`
-avoids tunnels altogether and worked immediately. It needs `mkcert` installed
-(`brew install mkcert && mkcert -install`) and certs generated into `.shopify/`:
-
-```bash
-mkcert -key-file .shopify/localhost-key.pem -cert-file .shopify/localhost.pem localhost 127.0.0.1 ::1
-shopify app dev --use-localhost
-```
-
-Localhost mode is incompatible with webhook subscriptions, since Shopify has to
-reach those from outside. This app declares two inherited from the template and
-uses neither meaningfully, so comment them out of `shopify.app.toml` while using
-localhost mode.
+**Verified running in Shopify admin** — booted against a real development store
+and walked through all six steps above. See
+[Running the dev server](#running-the-dev-server) to reproduce it.
 
 ## License
 
